@@ -4,8 +4,12 @@ import { Separator } from '@/components/ui/separator'
 import { CodeCard } from '@/components/code-card'
 import { HomeNavigation } from '@/components/home-navigation'
 import AboutSection from '@/components/about-section'
+import SignUpPage from './signUpPage'
 
 export default function Home() {
+  return (
+    <SignUpPage />
+  )
   return (
     <main className='flex flex-col items-center justify-center min-h-screen'>
       <div className="flex min-h-screen flex-col items-center justify-between p-24 h-screen w-full">
