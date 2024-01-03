@@ -1,11 +1,30 @@
+"use client"
+
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { CodeCard } from '@/components/code-card'
 import { HomeNavigation } from '@/components/home-navigation'
 import AboutSection from '@/components/about-section'
+import { useEffect } from 'react'
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { firebaseConfig, initializeFirebaseApp } from '@/lib/firebase'
+import firebase from '@/lib/firebase'
+import 'firebase/compat/auth';
+import Link from 'next/link';
+// import { useRouter } from 'next/router';
 
 export default function Home() {
+  firebase.initializeApp(firebaseConfig)
+  // Configure Firebae authentication
+  const auth = firebase.auth().currentUser
+  // console.log(auth)
+
+  // const router = useRouter()
+  // const handleAuthClick = () => {
+  //   router.push('/auth')
+  // }
+
   return (
     <main className='flex flex-col items-center justify-center min-h-screen'>
       <div className="flex min-h-screen flex-col items-center justify-between p-24 h-screen w-full">
@@ -15,11 +34,11 @@ export default function Home() {
         <div className="w-full h-3/4 bg-[url(/ed-background.jpeg)] bg-contain bg-repeat flex items-center justify-center border rounded-xl">
           <div className="flex justify-center items-center bg-white py-5 px-10 rounded-full border">
             <Image
-                src="/patch-the-penguin.svg"
-                alt="Patch the Penguin"
-                width={100}
-                height={100}
-              />
+              src="/patch-the-penguin.svg"
+              alt="Patch the Penguin"
+              width={100}
+              height={100}
+            />
             <Separator className="h-[100px] m-2" orientation="vertical" />
             <div className='flex flex-col'>
               <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
@@ -38,11 +57,15 @@ export default function Home() {
           <CodeCard title="Functions" blockHref={'blockfunction.svg'} code={'def spin():\n\tturnLeft(15)'}
             className="transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110"
           />
-          <CodeCard title="Conditions" blockHref={'blockconditional.svg'} code={'if mouseDown():\n\tturnLeft(15)'} 
+          <CodeCard title="Conditions" blockHref={'blockconditional.svg'} code={'if mouseDown():\n\tturnLeft(15)'}
             className="transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110"
           />
         </div>
-        <Button> Start Coding </Button>
+        <Button>
+          <Link href='/auth'>
+            Start Coding
+          </Link>
+        </Button>
       </div>
       <div className="flex flex-col items-start">
         <h1 className="text-3xl mb-2 font-extrabold tracking-tight lg:text-3xl">

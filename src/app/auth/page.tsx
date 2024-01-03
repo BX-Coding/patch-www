@@ -1,7 +1,14 @@
 import { Metadata } from "next"
 import Image from "next/image"
-import Link from "next/link"
 import UserAuthForm from "./UserAuthForm"
+import 'firebase/compat/auth';
+// import firebase from './../lib/firebase'
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { firebaseConfig, initializeFirebaseApp } from '@/lib/firebase'
+import firebase from '@/lib/firebase'
+import 'firebase/compat/auth';
+import Link from 'next/link';
+
 
 export const metadata: Metadata = {
     title: "Authentication",
@@ -9,6 +16,10 @@ export const metadata: Metadata = {
 }
 
 export default function SignUpPage() {
+    firebase.initializeApp(firebaseConfig)
+    const auth = firebase.auth()
+    console.log(auth.currentUser)
+
     return (
         <>
             <div className="md:hidden">
