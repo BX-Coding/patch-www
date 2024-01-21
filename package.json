@@ -23,7 +23,7 @@
     "firebaseui": "^6.1.0",
     "html-react-parser": "^5.0.6",
     "lucide-react": "^0.289.0",
-    "next": "13.5.6",
+    "next": "^14.1.1-canary.4",
     "react": "^18",
     "react-dom": "^18",
     "react-router-dom": "^6.20.0",

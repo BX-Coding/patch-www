@@ -6,24 +6,20 @@ import { Separator } from '@/components/ui/separator'
 import { CodeCard } from '@/components/code-card'
 import { HomeNavigation } from '@/components/home-navigation'
 import AboutSection from '@/components/about-section'
-import { useEffect } from 'react'
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { firebaseConfig, initializeFirebaseApp } from '@/lib/firebase'
+import { firebaseConfig } from '@/lib/firebase'
 import firebase from '@/lib/firebase'
 import 'firebase/compat/auth';
 import Link from 'next/link';
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
+  const router = useRouter()
   firebase.initializeApp(firebaseConfig)
-  // Configure Firebae authentication
-  const auth = firebase.auth().currentUser
-  // console.log(auth)
 
-  // const router = useRouter()
-  // const handleAuthClick = () => {
-  //   router.push('/auth')
-  // }
+  
+  const test = () => {
+    console.log(firebase.auth().currentUser)
+  }
 
   return (
     <main className='flex flex-col items-center justify-center min-h-screen'>
@@ -61,11 +57,19 @@ export default function Home() {
             className="transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110"
           />
         </div>
-        <Button>
-          <Link href='/auth'>
-            Start Coding
-          </Link>
-        </Button>
+        {!firebase.auth().currentUser ?
+          <Button>
+            <Link href='/auth'>
+              Start Coding    
+            </Link>
+          </Button>
+          :
+          <Button onClick={test}>
+            acc name
+          </Button>
+        }
+
+
       </div>
       <div className="flex flex-col items-start">
         <h1 className="text-3xl mb-2 font-extrabold tracking-tight lg:text-3xl">

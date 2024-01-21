@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import { getAuthErrorMessage } from "@/lib/firebase-auth-errors"
 import firebase from '@/lib/firebase'
 import 'firebase/auth';
+import { useRouter } from "next/navigation"
 
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
@@ -25,14 +26,11 @@ export default function UserAuthForm({ className, ...props }: UserAuthFormProps)
   const [passwordText, setPasswordText] = React.useState<string>('');
   const [isSignIn, setIsSignIn] = React.useState<boolean>(false)
 
+  const router = useRouter()
+
   const onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault()
     setIsLoading(true)
-
-    // setTimeout(() => {
-    //   setIsLoading(false)
-    // }, 3000)
-
     try {
       if (isSignIn) {
         signInWithEmailAndPassword(auth, emailText, passwordText).catch((error) => {
@@ -42,16 +40,17 @@ export default function UserAuthForm({ className, ...props }: UserAuthFormProps)
             toast.success("Signed in successfully!");
             // handleClose();
             setIsLoading(false)
+            router.push('/')
           }
-        });
+        })
       } else {
         createUserWithEmailAndPassword(auth, emailText, passwordText).catch((error) => {
           toast.error(getAuthErrorMessage(error.code));
         }).then((userCredential) => {
           if (userCredential) {
             toast.success("Signed in successfully!");
-            // handleClose();
             setIsLoading(false)
+            router.push('/')
           }
         })
       }
@@ -76,8 +75,19 @@ export default function UserAuthForm({ className, ...props }: UserAuthFormProps)
   }
 
 
+  const handleSignInChange = () => {
+    setIsSignIn(!isSignIn)
+  }
+
   return (
     <div className={cn("grid gap-6", className)} {...props}>
+      <h1 className="text-2xl font-semibold tracking-tight">
+        {isSignIn ?
+          "Sign in to existing account"
+          :
+          "Create an account"
+        }
+      </h1>
       <form onSubmit={onSubmit}>
         <div className="grid gap-2">
           <div className="grid gap-1">
@@ -108,15 +118,27 @@ export default function UserAuthForm({ className, ...props }: UserAuthFormProps)
               onChange={onPasswordChange}
             />
           </div>
-          <p className="text-sm text-muted-foreground" onClick={forgotPassword}>
-            Forgot password?
-          </p>
+          {!isSignIn ?
+            <></>
+            :
+            <p className="text-sm text-muted-foreground" onClick={forgotPassword}>
+              Forgot password?
+            </p>
+          }
+
           <Button disabled={isLoading}>
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
-            Sign in with email
+            Sign up with email
           </Button>
+          <p className="text-sm text-muted-foreground" onClick={handleSignInChange}>
+            {!isSignIn ?
+              "Already have an account?"
+              :
+              "Create new account"
+            }
+          </p>
         </div>
       </form>
     </div>
