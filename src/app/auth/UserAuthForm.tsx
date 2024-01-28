@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Icons } from "@/components/ui/icons"
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
+import { createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth"
 import { auth, firebaseConfig } from "@/lib/firebase"
 import { toast } from 'react-toastify';
 import { getAuthErrorMessage } from "@/lib/firebase-auth-errors"
@@ -25,6 +25,7 @@ export default function UserAuthForm({ className, ...props }: UserAuthFormProps)
   const [emailText, setEmailText] = React.useState<string>('')
   const [passwordText, setPasswordText] = React.useState<string>('');
   const [isSignIn, setIsSignIn] = React.useState<boolean>(false)
+  const [passwordResetSent, setPasswordResetSent] = React.useState<boolean>(false)
 
   const router = useRouter()
 
@@ -71,8 +72,26 @@ export default function UserAuthForm({ className, ...props }: UserAuthFormProps)
 
 
   const forgotPassword = () => {
-    console.log(firebase.auth().currentUser)
+    const email = emailText
+    try {
+      if (email) {
+        sendPasswordResetEmail(auth, email)
+          .then(() => {
+            setPasswordResetSent(true)
+            console.log("Password reset email sent!")
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log("Error Code: ", errorCode)
+            console.log("Error Message: ", errorMessage)
+          });
+      }
+    } catch (error) {
+      console.log("Error: ", error)
+    }
   }
+
 
 
   const handleSignInChange = () => {
@@ -121,16 +140,25 @@ export default function UserAuthForm({ className, ...props }: UserAuthFormProps)
           {!isSignIn ?
             <></>
             :
-            <p className="text-sm text-muted-foreground" onClick={forgotPassword}>
-              Forgot password?
-            </p>
+            passwordResetSent ?
+              <p className="text-sm text-muted-foreground">
+                Password reset email sent!
+              </p> :
+              <p className="text-sm text-muted-foreground" onClick={forgotPassword}>
+                Forgot password?
+              </p>
+
           }
 
           <Button disabled={isLoading}>
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
-            Sign up with email
+            {isSignIn ? 
+            "Sign in to existing account"
+            :
+            "Sign up with email"
+            }
           </Button>
           <p className="text-sm text-muted-foreground" onClick={handleSignInChange}>
             {!isSignIn ?

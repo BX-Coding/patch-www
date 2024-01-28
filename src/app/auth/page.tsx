@@ -45,10 +45,10 @@ export default function SignUpPage() {
                         <Image
                             src="/patch-the-penguin.svg"
                             alt="Patch the Penguin"
-                            width={100}
-                            height={100}
+                            width={400}
+                            height={400}
                         />
-                        Patch
+                        
                     </div>
                     <div className="relative z-20 mt-auto">
                         <blockquote className="space-y-2">

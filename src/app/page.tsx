@@ -11,14 +11,24 @@ import firebase from '@/lib/firebase'
 import 'firebase/compat/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation'
+import { getAuth, signOut } from "firebase/auth";
 
 export default function Home() {
   const router = useRouter()
   firebase.initializeApp(firebaseConfig)
+  const auth = getAuth()
 
-  
-  const test = () => {
-    console.log(firebase.auth().currentUser)
+  const handleLogOut = () => {
+    signOut(auth).then(() => {
+      console.log("Sign out successful")
+
+      // Force page refresh so that server-side data is refreshed
+      window.location.reload()
+      router.push('/')
+    })
+    .catch((error) => {
+      console.log("Error: ", error)
+    })
   }
 
   return (
@@ -60,15 +70,20 @@ export default function Home() {
         {!firebase.auth().currentUser ?
           <Button>
             <Link href='/auth'>
-              Start Coding    
+              Start Coding
             </Link>
           </Button>
           :
-          <Button onClick={test}>
-            acc name
+          <></>
+        }
+        {!firebase.auth().currentUser ?
+          <></>
+          :
+          // Log Out button
+          <Button onClick={handleLogOut}>
+            Log Out
           </Button>
         }
-
 
       </div>
       <div className="flex flex-col items-start">
